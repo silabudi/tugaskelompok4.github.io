@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Tag Manager -->
+  <script>
+  (function(w,d,s,l,i){
+    w[l]=w[l]||[];
+    w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+    var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';
+    j.async=true;
+    j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+    f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-N2LSNMJB');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <title>Website Pemrograman Integratif</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-color: #f0f2f5;
+      --text-color: #333;
+      --header-color: #007BFF;
+      --card-bg: #fff;
+      --nav-bg: #333;
+      --nav-hover: #575757;
+    }
+    body.dark-mode {
+      --bg-color: #121212;
+      --text-color: #eee;
+      --card-bg: #1e1e1e;
+      --nav-bg: #222;
+      --nav-hover: #555;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+    header {
+      background-color: var(--header-color);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background: var(--nav-bg);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav a, button {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: block;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    nav a:hover, button:hover {
+      background-color: var(--nav-hover);
+    }
+    #content {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+    .quiz-option {
+      display: block;
+      background: var(--nav-bg);
+      color: white;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .quiz-option:hover {
+      background: var(--nav-hover);
+    }
+    video {
+      width: 100%;
+      max-width: 800px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .score-box {
+      background: var(--card-bg);
+      padding: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--header-color);
+      font-weight: bold;
+    }
+    #progress-container {
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0;
+      background: var(--header-color);
+      border-radius: 10px;
+      transition: width 0.4s;
+    }
+    .shake {
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
+    }
+    #color-picker {
+      display: none;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      margin: 20px auto;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .color-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N2LSNMJB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <header>
+    <h1>Website Pemrograman Integratif</h1>
+  </header>
+
+  <nav id="nav-menu"></nav>
+
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <div id="score" class="score-box" style="display:none;"></div>
+
+  <div id="color-picker"></div>
+
+  <div id="content"></div>
+
+  <canvas id="quizChart" width="400" height="200" style="display:none;"></canvas>
+
+  <audio id="audio-correct" src="https://freesound.org/data/previews/540/540956_10388041-lq.mp3"></audio>
+  <audio id="audio-wrong" src="https://freesound.org/data/previews/414/414209_5121236-lq.mp3"></audio>
+  <script>
+    let currentHeaderColor = "#007BFF";
+    let totalCorrect = 0;
+    let totalQuestions = 0;
+    let currentIndex = 0;
+    let totalQuizCount = 0;
+
+    const funFacts = [
+      "HTML pertama kali diperkenalkan oleh Tim Berners-Lee pada tahun 1991.",
+      "CSS3 mendukung animasi tanpa Javascript!",
+      "HTML5 mendukung video bawaan tanpa plugin eksternal.",
+      "Web pertama di dunia hanya memiliki satu halaman.",
+      "CSS dapat digunakan untuk membuat animasi loading yang kompleks."
+    ];
+
+    const materi = {
+      html: {
+        title: "Belajar HTML",
+        content: `
+          <h3>Apa itu HTML?</h3>
+          <p>HTML (Hypertext Markup Language) adalah bahasa markup untuk membuat struktur halaman web.</p>
+          <h3>Struktur Dasar HTML</h3>
+          <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Judul Halaman&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Konten halaman di sini
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+          <h3>Tag Penting HTML</h3>
+          <ul>
+            <li>&lt;h1&gt; sampai &lt;h6&gt; → Judul</li>
+            <li>&lt;p&gt; → Paragraf</li>
+            <li>&lt;a&gt; → Tautan (link)</li>
+            <li>&lt;img&gt; → Gambar</li>
+            <li>&lt;ul&gt;, &lt;ol&gt; → List</li>
+          </ul>`,
+        video: "https://www.w3schools.com/html/mov_bbb.mp4",
+        quizzes: [
+          { type:"mc", question:"Apa kepanjangan HTML?", options:["Hyper Text Markup Language","High Text Markup Language","Hyperlinks and Text Markup Language","Home Tool Markup Language"], answer:"Hyper Text Markup Language" },
+          { type:"tf", question:"Tag &lt;p&gt; digunakan untuk membuat paragraf.", answer:"Benar" },
+          { type:"mc", question:"Tag untuk membuat link?", options:["<a>","<p>","<img>","<h1>"], answer:"<a>" },
+          { type:"mc", question:"Tag untuk heading terbesar?", options:["<h6>","<h1>","<p>","<div>"], answer:"<h1>" },
+          { type:"tf", question:"HTML bisa digunakan untuk logika pemrograman.", answer:"Salah" },
+          { type:"mc", question:"Tag untuk memasukkan gambar?", options:["<img>","<video>","<h2>","<ul>"], answer:"<img>" },
+          { type:"tf", question:"DOCTYPE harus ditulis di awal HTML.", answer:"Benar" },
+          { type:"mc", question:"Tag list berurutan adalah?", options:["<ul>","<ol>","<p>","<div>"], answer:"<ol>" },
+          { type:"mc", question:"Tag yang tidak memiliki penutup?", options:["<img>","<p>","<h1>","<div>"], answer:"<img>" },
+          { type:"tf", question:"HTML5 mendukung audio dan video bawaan.", answer:"Benar" }
+        ]
+      },
+      css: {
+        title: "Belajar CSS",
+        content: `
+          <h3>Pengertian CSS</h3>
+          <p>CSS (Cascading Style Sheets) digunakan untuk mengatur tampilan website. Dengan CSS, kita bisa mengubah warna, ukuran, layout, dan animasi elemen HTML.</p>
+          <h3>Selector CSS</h3>
+          <p>Selector adalah cara memilih elemen HTML yang akan diberi gaya. Contoh selector: tag, class, id.</p>
+          <h3>Properti CSS</h3>
+          <ul>
+            <li>color → warna teks</li>
+            <li>background-color → warna latar</li>
+            <li>font-size → ukuran teks</li>
+            <li>margin, padding → jarak elemen</li>
+          </ul>`,
+        video: "https://www.w3schools.com/css/mov_bbb.mp4",
+        quizzes: [
+          { type:"mc", question:"CSS singkatan dari apa?", options:["Cascading Style Sheets","Creative Style Sheet","Computer Style Sheet","Colorful Style Sheet"], answer:"Cascading Style Sheets" },
+          { type:"tf", question:"CSS bisa mengatur warna background.", answer:"Benar" },
+          { type:"mc", question:"Selector untuk class diawali dengan?", options:["#",".","$","&"], answer:"." },
+          { type:"mc", question:"Properti untuk ukuran teks?", options:["color","font-size","margin","padding"], answer:"font-size" },
+          { type:"tf", question:"CSS tidak bisa membuat animasi.", answer:"Salah" },
+          { type:"mc", question:"Properti background-color mengatur apa?", options:["warna teks","warna latar","ukuran font","jarak elemen"], answer:"warna latar"},
+          { type:"tf", question:"CSS hanya digunakan untuk HTML.", answer:"Salah"},
+          { type:"mc", question:"Selector untuk id diawali dengan?", options:[".","#","%","&"], answer:"#"},
+          { type:"mc", question:"File CSS memiliki ekstensi?", options:[".html",".css",".js",".php"], answer:".css"},
+          { type:"tf", question:"CSS bisa membuat layout grid.", answer:"Benar"}
+        ]
+      }
+    };
+    function showMenu() {
+      document.getElementById("nav-menu").innerHTML = `
+        <a href="#" onclick="showHome()">Home</a>
+        <a href="#" onclick="showMateri('html')">Materi HTML</a>
+        <a href="#" onclick="showMateri('css')">Materi CSS</a>
+        <a href="#" onclick="showFunFact()">Fun Fact</a>
+        <a href="#" onclick="showStats()">Statistik</a>
+        <a href="#" onclick="showColorPicker()">🎨 Warna</a>
+        <button onclick="toggleDarkMode()">Dark Mode</button>
+      `;
+    }
+
+    function showHome() {
+      const random = funFacts[Math.floor(Math.random() * funFacts.length)];
+      document.getElementById("content").innerHTML = `
+        <div class="card">
+          <h2>Selamat Datang di Website Pemrograman Integratif 🚀</h2>
+          <p>Website ini membantu kamu belajar <strong>HTML</strong> dan <strong>CSS</strong> lewat materi, video, dan latihan soal interaktif.</p>
+          <ul>
+            <li>✅ Materi & Video HTML dan CSS</li>
+            <li>✅ Quiz interaktif dengan skor</li>
+            <li>✅ Dark Mode & Custom Warna</li>
+            <li>✅ Statistik hasil quiz</li>
+          </ul>
+          <p style="margin-top:20px;"><em>Fun Fact:</em> ${random}</p>
+          <button onclick="showMateri('html')">Mulai Belajar HTML</button>
+          <button onclick="showMateri('css')">Mulai Belajar CSS</button>
+        </div>`;
+      hideChart();
+      hideColorPicker();
+    }
+
+    function showMateri(subject) {
+      const m = materi[subject];
+      document.getElementById("content").innerHTML = `
+        <div class="card">
+          <h2>${m.title}</h2>
+          ${m.content}
+          <video controls src="${m.video}"></video>
+          <button onclick="startQuiz('${subject}')">Mulai Quiz</button>
+        </div>`;
+      hideChart();
+      hideColorPicker();
+    }
+
+    function showFunFact() {
+      const random = funFacts[Math.floor(Math.random() * funFacts.length)];
+      document.getElementById("content").innerHTML = `
+        <div class="card">
+          <h2>Fun Fact 🔎</h2>
+          <p>${random}</p>
+        </div>`;
+      hideChart();
+      hideColorPicker();
+    }
+
+    function startQuiz(subject) {
+      totalCorrect = 0;
+      totalQuizCount++;
+      const quiz = materi[subject].quizzes;
+      totalQuestions = quiz.length;
+      currentIndex = 0;
+      document.getElementById("progress-container").style.display = "block";
+      showQuestion(subject, currentIndex);
+      hideChart();
+      hideColorPicker();
+    }
+
+    function showQuestion(subject, i) {
+      const q = materi[subject].quizzes[i];
+      let html = `<div class="card">
+        <h3>Soal ${i+1} dari ${materi[subject].quizzes.length}</h3>
+        <p>${escapeHtml(q.question)}</p>`;
+
+      if (q.type === "mc") {
+        q.options.forEach(opt => {
+          html += `<div class="quiz-option" onclick="checkAnswer('${subject}',${i},'${opt.replace(/'/g,"\\'")}')">${escapeHtml(opt)}</div>`;
+        });
+      } else if (q.type === "tf") {
+        html += `
+          <div class="quiz-option" onclick="checkAnswer('${subject}',${i},'Benar')">Benar</div>
+          <div class="quiz-option" onclick="checkAnswer('${subject}',${i},'Salah')">Salah</div>`;
+      }
+
+      html += `</div>`;
+      document.getElementById("content").innerHTML = html;
+
+      const percent = ((i) / materi[subject].quizzes.length) * 100;
+      document.getElementById("progress-bar").style.width = percent + "%";
+    }
+    function checkAnswer(subject, i, answer) {
+      const q = materi[subject].quizzes[i];
+      const options = document.querySelectorAll(".quiz-option");
+
+      let correct = false;
+      if (q.answer === answer) {
+        correct = true;
+        totalCorrect++;
+        document.getElementById("audio-correct").play();
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      } else {
+        document.getElementById("audio-wrong").play();
+        document.querySelector(".card").classList.add("shake");
+        setTimeout(() => {
+          document.querySelector(".card").classList.remove("shake");
+        }, 400);
+      }
+
+      options.forEach(opt => {
+        if (opt.textContent === q.answer) {
+          opt.style.background = "green";
+        } else {
+          opt.style.background = "crimson";
+        }
+        opt.style.pointerEvents = "none";
+      });
+
+      setTimeout(() => {
+        if (i + 1 < materi[subject].quizzes.length) {
+          currentIndex++;
+          showQuestion(subject, currentIndex);
+        } else {
+          showQuizResult(subject);
+        }
+      }, 1500);
+    }
+
+    function showQuizResult(subject) {
+      document.getElementById("progress-container").style.display = "none";
+      const total = materi[subject].quizzes.length;
+      const percent = Math.round((totalCorrect / total) * 100);
+
+      document.getElementById("content").innerHTML = `
+        <div class="card">
+          <h2>Hasil Quiz ${materi[subject].title}</h2>
+          <p>Kamu benar <strong>${totalCorrect}</strong> dari <strong>${total}</strong> soal.</p>
+          <p>Persentase: <strong>${percent}%</strong></p>
+          <button onclick="showHome()">Kembali ke Home</button>
+        </div>
+      `;
+
+      document.getElementById("score").style.display = "block";
+      document.getElementById("score").innerText = `Skor Terakhir: ${totalCorrect} benar dari ${total} soal`;
+    }
+
+    function showStats() {
+      document.getElementById("content").innerHTML = `
+        <div class="card">
+          <h2>Statistik Quiz</h2>
+          <canvas id="quizChart" width="400" height="200"></canvas>
+        </div>
+      `;
+      hideColorPicker();
+
+      const ctx = document.getElementById("quizChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Quiz Dikerjakan"],
+          datasets: [{
+            label: "Jumlah Quiz",
+            data: [totalQuizCount],
+            backgroundColor: currentHeaderColor
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function hideChart() {
+      document.getElementById("quizChart").style.display = "none";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function showColorPicker() {
+      const colors = ["#ff5733", "#28a745", "#6610f2", "#20c997", "#fd7e14"];
+      let html = `<h3>Pilih Warna Header</h3>`;
+      colors.forEach(color => {
+        html += `<div class="color-button" style="background:${color}" onclick="changeHeaderColor('${color}')"></div>`;
+      });
+      document.getElementById("color-picker").innerHTML = html;
+      document.getElementById("color-picker").style.display = "block";
+    }
+
+    function changeHeaderColor(color) {
+      currentHeaderColor = color;
+      document.querySelector("header").style.backgroundColor = color;
+      document.getElementById("color-picker").style.display = "none";
+    }
+
+    function hideColorPicker() {
+      document.getElementById("color-picker").style.display = "none";
+    }
+
+    window.onload = () => {
+      showMenu();
+      showHome();
+    };
+  </script>
+
+</body>
+</html>
